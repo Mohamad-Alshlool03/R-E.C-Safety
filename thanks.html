@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>شكرًا — تم استلام طلبك | R E.C Safety</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;800&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg:#e7edf5; --surface:#fefefe; --border:#cfd7e6; --text:#0e1623; --muted:#4c5a70;
+      --brand:#0a84ff; --brand-2:#40b3ff; --wa1:#25D366; --wa2:#20bf5a;
+      --radius:16px; --shadow:0 10px 30px rgba(20,40,80,.10); --max:900px
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0; font-family:"Cairo",system-ui; color:var(--text);
+      background:
+        radial-gradient(1100px 700px at 85% -100px, rgba(64,179,255,.12), transparent 60%),
+        linear-gradient(180deg, #eef3fa, var(--bg));
+      line-height:1.75;
+    }
+
+    /* Header */
+    header{position:sticky; top:0; z-index:40; backdrop-filter:saturate(1.2) blur(8px);
+      background:linear-gradient(180deg, rgba(242,246,252,.85), rgba(242,246,252,.7));
+      border-bottom:1px solid var(--border); box-shadow:0 6px 24px rgba(10,20,40,.08)}
+    .nav{max-width:var(--max); margin:auto; padding:12px 20px; display:flex; align-items:center; gap:16px}
+    .logo{display:flex; align-items:center; gap:10px; font-weight:800; text-decoration:none; color:inherit}
+    .logo img{height:44px; width:44px; border-radius:10px; object-fit:cover; border:1px solid var(--border)}
+    .nav-links{display:flex; gap:12px; margin-inline-start:auto}
+    .nav-links a{color:var(--text); text-decoration:none; opacity:.9}
+    .nav-links a:hover{opacity:1}
+
+    .wrap{max-width:var(--max); margin:auto; padding:24px 20px}
+    .panel{background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); box-shadow:var(--shadow); padding:22px}
+    .title{margin:0 0 6px; font-size:clamp(26px,4vw,34px); font-weight:800}
+    .muted{color:var(--muted)}
+    .actions{display:flex; gap:10px; flex-wrap:wrap; margin-top:12px}
+    .btn{display:inline-flex; align-items:center; gap:8px; padding:12px 16px; border-radius:12px; font-weight:800; border:1px solid transparent; text-decoration:none; cursor:pointer}
+    .btn-brand{background:linear-gradient(135deg,var(--brand),var(--brand-2)); color:#fff}
+    .btn-ghost{background:#fff; border:1px solid var(--border); color:#0e1623}
+    .btn-wa{background:linear-gradient(135deg,var(--wa1),var(--wa2)); color:#fff}
+    .box{border:1px solid var(--border); border-radius:12px; padding:14px; background:#fff; margin-top:12px}
+    .kudos{display:flex; gap:14px; align-items:center; padding:14px; border:1px solid var(--border); border-radius:14px; background:#f7fbff; margin-bottom:10px}
+    .kudos svg{flex:0 0 auto}
+    .list{margin:8px 0 0; padding:0 0 0 18px}
+    code{background:#f7f9fd; border:1px solid #e2e8f0; padding:2px 6px; border-radius:6px}
+    /* رقم LTR داخل صفحة RTL */
+    .ltr{direction:ltr; unicode-bidi:plaintext}
+  </style>
+</head>
+<body>
+
+  <!-- Header with logo (نخلي الشعار فقط بدون صورة غلاف) -->
+  <header>
+    <nav class="nav" aria-label="التنقل">
+      <a class="logo" href="index.html" title="العودة للرئيسية">
+        <img src="cover.jpg" alt="R E.C Safety Logo">
+        <span>R E.C <span style="color:var(--brand)">Safety</span></span>
+      </a>
+      <div class="nav-links">
+        <a href="index.html#services">الخدمات</a>
+        <a href="index.html#zoomBooking">حجز زووم</a>
+        <a href="index.html#contact">تواصل</a>
+      </div>
+    </nav>
+  </header>
+
+  <main class="wrap">
+    <div class="panel">
+      <div class="kudos">
+        <!-- أيقونة نجاح -->
+        <svg width="42" height="42" viewBox="0 0 24 24" aria-hidden="true">
+          <defs><linearGradient id="g" x1="0" x2="1"><stop offset="0" stop-color="#0a84ff"/><stop offset="1" stop-color="#40b3ff"/></linearGradient></defs>
+          <circle cx="12" cy="12" r="10" fill="url(#g)"/>
+          <path d="M8.5 12.5l2.5 2.5 5-6" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <div>
+          <h1 class="title">شكرًا، تم استلام طلبك 🎉</h1>
+          <p class="muted" id="thanksLine">تلقّينا تفاصيلك وسنراجع الطلب ونتواصل معك قريبًا.</p>
+        </div>
+      </div>
+
+      <!-- ملخص الطلب (يظهر إن وُجد في LocalStorage) -->
+      <div id="summaryBox" class="box" style="display:none">
+        <h3 style="margin:0 0 8px">ملخص الطلب</h3>
+        <div id="summary"></div>
+      </div>
+
+      <!-- أزرار الإجراءات -->
+      <div class="actions">
+        <a id="waBtn" class="btn btn-wa" href="#" target="_blank" rel="noopener">تأكيد سريع عبر واتساب</a>
+        <a class="btn btn-brand" href="index.html#services">الانتقال للخدمات</a>
+        <a class="btn btn-ghost" href="index.html#zoomBooking">حجز اجتماع زووم</a>
+        <a class="btn btn-ghost" href="index.html">العودة للرئيسية</a>
+      </div>
+
+      <!-- تلميحات -->
+      <div class="box">
+        <strong>ماذا بعد؟</strong>
+        <ul class="list">
+          <li>لو نسيت ترفق الإيصال، أعد إرسال الطلب وأرفقه أو أرسل لنا الإيصال على واتساب.</li>
+          <li>
+            لأي استفسار عاجل: واتساب
+            <span class="ltr">+962 79 098 6908</span>
+            أو بريد <code>mshlool684@gmail.com</code>.
+          </li>
+        </ul>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    // قراءة أي بيانات محفوظة محليًا (من checkout.html)
+    const data = JSON.parse(localStorage.getItem('lastOrder') || '{}');
+
+    // إظهار ملخص إن توفر
+    const sumBox = document.getElementById('summaryBox');
+    const sumEl  = document.getElementById('summary');
+
+    if (Object.keys(data).length) {
+      sumBox.style.display = 'block';
+      sumEl.innerHTML = `
+        <div>الخدمة: <strong>${data.item || '-'}</strong></div>
+        <div>القيمة: <strong>${data.price ? Number(data.price).toLocaleString('ar-EG')+' د.أ' : '-'}</strong></div>
+        <div>طريقة الدفع: <strong>${data.payment?.title || '-'}</strong> — ${data.payment ? (data.payment.label+': '+data.payment.value) : ''}</div>
+        <div>الشركة: <strong>${data.company || '-'}</strong></div>
+        <div>المسؤول: <strong>${data.contact_name || '-'}</strong> ${data.contact_phone? '— '+data.contact_phone : ''}</div>
+        <div>البريد: <strong>${data.email || '-'}</strong></div>
+      `;
+    }
+
+    // زر واتساب برسالة جاهزة
+    const WA_INTL = '962790986908';
+    const lines = [
+      'تأكيد طلب — R E.C Safety',
+      data.item ? `الخدمة: ${data.item}` : null,
+      data.price ? `القيمة: ${Number(data.price).toLocaleString('ar-EG')} د.أ` : null,
+      data.payment ? `طريقة الدفع: ${data.payment.title} (${data.payment.label}: ${data.payment.value})` : null,
+      data.company ? `اسم الشركة: ${data.company}` : null,
+      (data.contact_name || data.contact_phone) ? `المسؤول: ${data.contact_name||''} ${data.contact_phone? '— '+data.contact_phone : ''}` : null,
+      data.email ? `البريد: ${data.email}` : null
+    ].filter(Boolean).join('\n') || 'أرغب بتأكيد طلبي.';
+
+    document.getElementById('waBtn').href = `https://wa.me/${WA_INTL}?text=${encodeURIComponent(lines)}`;
+  </script>
+</body>
+</html>

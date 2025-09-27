@@ -3,9 +3,9 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Qannas Safety Consulting — استشارات الصحة والسلامة المهنية</title>
+  <title>R E.C Safety Consulting — استشارات الصحة والسلامة المهنية</title>
   <meta name="description" content="استشارات وتأهيل المنشآت للسلامة والصحة المهنية: أهداف واضحة، خدمات احترافية، وتواصل سريع عبر واتساب أو البريد.">
-  <meta property="og:title" content="Qannas Safety Consulting — استشارات الصحة والسلامة المهنية">
+  <meta property="og:title" content="R E.C Safety Consulting — استشارات الصحة والسلامة المهنية">
   <meta property="og:description" content="أهداف واضحة لتحقيق الامتثال وتخفيف المخاطر.">
   <meta property="og:type" content="website">
   <meta name="theme-color" content="#0a84ff">
@@ -110,7 +110,7 @@
   <header>
     <nav class="nav" aria-label="التنقل الرئيسي">
       <div class="logo">
-        <img src="cover.jpg" alt="Qannas Safety Logo">
+        <img src="cover.jpg" alt="R E.C Safety Logo">
         <span>R E.C <span style="color:var(--brand)">Safety</span></span>
       </div>
       <div class="nav-links">
@@ -222,7 +222,7 @@
 
   <footer>
     <div class="wrap" style="display:flex; gap:12px; align-items:center; justify-content:space-between; flex-wrap:wrap; padding-block:18px">
-      <div class="muted">© Qannas Safety Consulting</div>
+      <div class="muted">© R E.C Safety Consulting</div>
       <div class="footer-note">تم التطوير من قبل محمد خالد الشلول</div>
       <a class="btn btn-wa" id="waFooter" href="#" style="font-size:18px">واتساب: 0790986908</a>
     </div>
@@ -241,7 +241,7 @@
     document.getElementById('waCta').href = waLink();
     document.getElementById('waFooter').href = waLink();
     document.getElementById('waQuick').href = waLink('مرحبًا، لدي استفسار سريع.');
-    document.getElementById('emailQuick').href = `mailto:${CONTACT.email}?subject=${encodeURIComponent('استفسار - Qannas Safety')}`;
+    document.getElementById('emailQuick').href = `mailto:${CONTACT.email}?subject=${encodeURIComponent('استفسار - R E.C Safety')}`;
 
     // ===== الخدمات + الأسعار =====
     const SERVICES = [
@@ -385,7 +385,7 @@
 
     document.getElementById('zoomEmail').addEventListener('click', ()=>{
       if(!zoomValidate()) return;
-      const subject = encodeURIComponent('حجز اجتماع زووم — Qannas Safety');
+      const subject = encodeURIComponent('حجز اجتماع زووم — R E.C Safety');
       const body = encodeURIComponent(zoomSummary());
       window.location.href = `mailto:${CONTACT.email}?subject=${subject}&body=${body}`;
     });

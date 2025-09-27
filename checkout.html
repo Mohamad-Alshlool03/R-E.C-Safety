@@ -11,7 +11,7 @@
     body{margin:0;font-family:"Cairo",system-ui;background:linear-gradient(180deg,#eef3fa,var(--bg));color:var(--text)}
     .wrap{max-width:var(--max);margin:auto;padding:28px 20px}
     .panel{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);box-shadow:0 10px 30px rgba(20,40,80,.08);padding:20px}
-    h1{margin:0 0 8px}h3{margin:0 0 8px}.muted{color:var(--muted)}
+    h1{margin:0 0 8px}.muted{color:var(--muted)}
     label{display:block;font-weight:800;margin:8px 0 6px}
     input,select,textarea{width:100%;padding:12px;border:1px solid var(--border);border-radius:12px;font:inherit}
     input:focus,select:focus,textarea:focus{border-color:var(--brand);box-shadow:0 0 0 3px rgba(10,132,255,.12);outline:0}
@@ -30,19 +30,19 @@
   <main class="wrap">
     <div class="panel">
       <h1>إتمام الطلب</h1>
-      <p class="muted">سيتم إرسال بيانات الطلب والمرفق إلى بريدنا عبر FormSubmit، مع تفعيل التحقق "أنا لستُ روبوتًا". ويمكنك أيضًا إرسال تأكيد سريع عبر واتساب.</p>
+      <p class="muted">سيتم إرسال بيانات الطلب والمرفق إلى بريدنا عبر FormSubmit (مع التحقق "أنا لستُ روبوتًا"). يمكنك أيضًا إرسال تأكيد عبر واتساب.</p>
 
-      <!-- نموذج FormSubmit (بدون PHP) -->
+      <!-- نموذج FormSubmit -->
       <form id="orderForm"
             action="https://formsubmit.co/mshlool684@gmail.com"
             method="POST"
             enctype="multipart/form-data">
 
         <!-- إعدادات FormSubmit -->
-        <input type="hidden" name="_captcha" value="true"><!-- تفعيل reCAPTCHA -->
+        <input type="hidden" name="_captcha" value="true"><!-- reCAPTCHA -->
         <input type="hidden" name="_template" value="table">
         <input type="hidden" name="_subject" id="_subject" value="طلب جديد — R E.C Safety">
-        <input type="hidden" name="_next" value="thanks.html">
+        <input type="hidden" name="_next" id="_next" value=""><!-- يُضبط تلقائيًا كرابط مطلق -->
 
         <!-- Honeypot لمنع السبام -->
         <input type="text" name="_honey" style="display:none" tabindex="-1" autocomplete="off" aria-hidden="true">
@@ -50,7 +50,7 @@
         <!-- تفاصيل الخدمة من الرابط -->
         <input type="hidden" name="item" id="f_item">
         <input type="hidden" name="price" id="f_price">
-        <!-- لراحة القراءة في الإيميل -->
+        <!-- لمزيد من الوضوح في الإيميل -->
         <input type="hidden" name="payment_value" id="f_pm_value">
         <input type="hidden" name="payment_label" id="f_pm_label">
 
@@ -113,6 +113,9 @@
   <div id="toast" class="toast">تم النسخ ✅</div>
 
   <script>
+    // ===== ضبط _next كرابط مطلق لصفحة الشكر =====
+    document.getElementById('_next').value = new URL('thanks.html', location.href).href;
+
     // ===== تفاصيل الخدمة من الرابط =====
     const p = new URLSearchParams(location.search);
     const item  = p.get('item')  || 'خدمة استشارية';
@@ -164,8 +167,15 @@
     document.getElementById('payGrid').addEventListener('change', renderPM);
     renderPM();
 
-    // ===== حفظ ملخص الطلب لصفحة الشكر =====
-    document.getElementById('orderForm').addEventListener('submit', ()=>{
+    // ===== تحقّق حجم الإيصال + حفظ الملخص لصفحة الشكر =====
+    document.getElementById('orderForm').addEventListener('submit', (e)=>{
+      const f = document.getElementById('receipt');
+      if(f.files[0] && f.files[0].size > 6*1024*1024){
+        e.preventDefault();
+        alert('حجم الإيصال يتجاوز 6MB، رجاءً قلّصه وأعد المحاولة.');
+        return;
+      }
+      // حفظ الملخص
       const company       = document.getElementById('company').value.trim();
       const company_phone = document.getElementById('company_phone').value.trim();
       const contact_name  = document.getElementById('contact_name').value.trim();

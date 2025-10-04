@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://mohamad-alshlool03.github.io/R-E.C-Safety/sitemap.xml

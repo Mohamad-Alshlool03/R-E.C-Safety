@@ -13,15 +13,42 @@
     .panel{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);box-shadow:0 10px 30px rgba(20,40,80,.08);padding:20px}
     h1{margin:0 0 8px}.muted{color:var(--muted)}
     label{display:block;font-weight:800;margin:8px 0 6px}
-    input,select,textarea{width:100%;padding:12px;border:1px solid var(--border);border-radius:12px;font:inherit}
+
+    /* استثناء الراديو/تشِك بوكس من العرض الكامل */
+    input:not([type="radio"]):not([type="checkbox"]), select, textarea{
+      width:100%;padding:12px;border:1px solid var(--border);border-radius:12px;font:inherit
+    }
     input:focus,select:focus,textarea:focus{border-color:var(--brand);box-shadow:0 0 0 3px rgba(10,132,255,.12);outline:0}
     .btn{display:inline-flex;align-items:center;gap:8px;padding:12px 16px;border-radius:12px;font-weight:800;text-decoration:none;border:1px solid transparent;cursor:pointer}
     .btn-brand{background:linear-gradient(135deg,var(--brand),var(--brand2));color:#fff}
     .btn-ghost{background:#fff;border:1px solid var(--border);color:#0e1623}
-    .grid-2{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}@media(max-width:700px){.grid-2{grid-template-columns:1fr}}
-    .pay-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}@media(max-width:900px){.pay-grid{grid-template-columns:1fr}}
-    .pay-option{display:flex;align-items:center;gap:10px;padding:12px;border:1px solid var(--border);border-radius:12px;background:#fff;cursor:pointer;font-weight:800}
-    .pm-hint{margin-top:10px;padding:10px 12px;border:1px dashed var(--border);border-radius:10px;background:#f8fbff}
+
+    /* حقول مزدوجة */
+    .grid-2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+    @media(max-width:700px){.grid-2{grid-template-columns:1fr}}
+    .grid-2>*{min-width:0}
+
+    /* شبكة خيارات الدفع */
+    .pay-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;align-items:stretch}
+    @media(max-width:900px){.pay-grid{grid-template-columns:1fr}}
+    .pay-grid>*{min-width:0}
+
+    .pay-option{
+      display:flex;align-items:center;gap:10px;
+      padding:14px 16px;border:1px solid var(--border);
+      border-radius:12px;background:#fff;cursor:pointer;font-weight:800;
+      width:100%;line-height:1.6;text-align:start;box-sizing:border-box;min-height:64px
+    }
+    /* إصلاح الراديو داخل البطاقة */
+    .pay-option input[type="radio"]{width:auto;flex:0 0 auto}
+
+    /* عنصر نص الخيار */
+    .pay-label{flex:1;min-width:0;white-space:normal;word-break:normal;overflow-wrap:break-word}
+
+    .pm-hint{
+      margin-top:10px;padding:10px 12px;border:1px dashed var(--border);
+      border-radius:10px;background:#f8fbff;overflow-wrap:break-word;word-break:normal
+    }
     .copybtn{margin-inline-start:8px}
     .toast{position:fixed;inset-inline-start:50%;transform:translateX(-50%);bottom:18px;background:#0a84ff;color:#fff;padding:10px 14px;border-radius:10px;box-shadow:0 10px 30px rgba(20,40,80,.1);display:none}
   </style>
@@ -32,48 +59,32 @@
       <h1>إتمام الطلب</h1>
       <p class="muted">سيتم إرسال بيانات الطلب والمرفق إلى بريدنا عبر FormSubmit (مع التحقق "أنا لستُ روبوتًا"). يمكنك أيضًا إرسال تأكيد عبر واتساب.</p>
 
-      <!-- نموذج FormSubmit -->
       <form id="orderForm"
             action="https://formsubmit.co/rec.safety1998@gmail.com"
             method="POST"
             enctype="multipart/form-data">
 
         <!-- إعدادات FormSubmit -->
-        <input type="hidden" name="_captcha" value="true"><!-- reCAPTCHA -->
+        <input type="hidden" name="_captcha" value="true">
         <input type="hidden" name="_template" value="table">
         <input type="hidden" name="_subject" id="_subject" value="طلب جديد — R E.C Safety">
-        <input type="hidden" name="_next" id="_next" value=""><!-- يُضبط تلقائيًا كرابط مطلق -->
-
-        <!-- Honeypot لمنع السبام -->
+        <input type="hidden" name="_next" id="_next" value="">
         <input type="text" name="_honey" style="display:none" tabindex="-1" autocomplete="off" aria-hidden="true">
 
-        <!-- تفاصيل الخدمة من الرابط -->
+        <!-- من رابط الخدمة -->
         <input type="hidden" name="item" id="f_item">
         <input type="hidden" name="price" id="f_price">
-        <!-- لمزيد من الوضوح في الإيميل -->
+        <!-- معلومات الدفع للإيضاح -->
         <input type="hidden" name="payment_value" id="f_pm_value">
         <input type="hidden" name="payment_label" id="f_pm_label">
 
-        <!-- ملخص سريع يظهر للمستخدم -->
         <div id="orderSummary" class="pm-hint" style="margin-bottom:10px"></div>
 
         <div class="grid-2">
-          <div>
-            <label for="company">اسم الشركة *</label>
-            <input id="company" name="company" required autocomplete="organization" placeholder="R E.C Safety">
-          </div>
-          <div>
-            <label for="company_phone">رقم الشركة (هاتف) *</label>
-            <input id="company_phone" name="company_phone" required autocomplete="tel" placeholder="هاتف الشركة">
-          </div>
-          <div>
-            <label for="contact_name">اسم مسؤول المتابعة *</label>
-            <input id="contact_name" name="contact_name" required autocomplete="name" placeholder="الاسم الثلاثي">
-          </div>
-          <div>
-            <label for="contact_phone">رقم هاتف المسؤول *</label>
-            <input id="contact_phone" name="contact_phone" required autocomplete="tel" placeholder="07xxxxxxxx">
-          </div>
+          <div><label for="company">اسم الشركة *</label><input id="company" name="company" required autocomplete="organization" placeholder="R E.C Safety"></div>
+          <div><label for="company_phone">رقم الشركة (هاتف) *</label><input id="company_phone" name="company_phone" required autocomplete="tel" placeholder="هاتف الشركة"></div>
+          <div><label for="contact_name">اسم مسؤول المتابعة *</label><input id="contact_name" name="contact_name" required autocomplete="name" placeholder="الاسم الثلاثي"></div>
+          <div><label for="contact_phone">رقم هاتف المسؤول *</label><input id="contact_phone" name="contact_phone" required autocomplete="tel" placeholder="07xxxxxxxx"></div>
         </div>
 
         <label for="email">البريد الإلكتروني *</label>
@@ -82,12 +93,20 @@
         <!-- طرق الدفع -->
         <label style="margin-top:8px">طريقة الدفع *</label>
         <div class="pay-grid" id="payGrid">
-		  <label class="pay-option"><input type="radio" name="payment_method" value="CliQ (الاسم المستعار)"checked> كليك (CliQ) — الاسم المستعار</label>
-          <label class="pay-option"><input type="radio" name="payment_method" value="زين كاش"> زين كاش</label>         
-		 <label class="pay-option"><input type="radio" name="payment_method" value="تحويل بنكي" > تحويل بنكي (رقم الحساب)</label>
+          <label class="pay-option">
+            <input type="radio" name="payment_method" value="CliQ (الاسم المستعار)" checked>
+            <span class="pay-label">كليك (CliQ) — الاسم المستعار</span>
+          </label>
+          <label class="pay-option">
+            <input type="radio" name="payment_method" value="زين كاش">
+            <span class="pay-label">زين كاش</span>
+          </label>
+          <label class="pay-option">
+            <input type="radio" name="payment_method" value="تحويل بنكي">
+            <span class="pay-label">تحويل بنكي (رقم الحساب)</span>
+          </label>
         </div>
 
-        <!-- تعليمات بحسب الاختيار + زر نسخ -->
         <div class="pm-hint" id="pmHint" aria-live="polite"></div>
 
         <label for="pref" style="margin-top:8px">تواصل مفضّل</label>
@@ -96,7 +115,6 @@
         <label for="notes" style="margin-top:8px">ملاحظات</label>
         <textarea id="notes" name="notes" rows="4" placeholder="تفاصيل إضافية"></textarea>
 
-        <!-- إيصال الدفع كمرفق -->
         <label for="receipt" style="margin-top:8px">إيصال الدفع (صورة/‏PDF) *</label>
         <input type="file" id="receipt" name="attachment" accept="image/*,application/pdf" required>
         <p class="muted" style="font-size:13px">يفضّل ألا يتجاوز 6MB لضمان وصوله عبر البريد.</p>
@@ -113,21 +131,20 @@
   <div id="toast" class="toast">تم النسخ ✅</div>
 
   <script>
-    // ===== ضبط _next كرابط مطلق لصفحة الشكر =====
+    // صفحة الشكر
     document.getElementById('_next').value = new URL('thanks.html', location.href).href;
 
-    // ===== تفاصيل الخدمة من الرابط =====
+    // تفاصيل الخدمة
     const p = new URLSearchParams(location.search);
     const item  = p.get('item')  || 'خدمة استشارية';
     const price = p.get('price') || '';
     document.getElementById('f_item').value  = item;
     document.getElementById('f_price').value = price;
     document.getElementById('_subject').value = `طلب جديد — ${item} | R E.C Safety`;
+    document.getElementById('orderSummary').innerHTML =
+      `الخدمة: <strong>${item}</strong> — القيمة: <strong>${price ? Number(price).toLocaleString('ar-EG')+' د.أ' : '-'}</strong>`;
 
-    const orderSummary = document.getElementById('orderSummary');
-    orderSummary.innerHTML = `الخدمة: <strong>${item}</strong> — القيمة: <strong>${price ? Number(price).toLocaleString('ar-EG')+' د.أ' : '-'}</strong>`;
-
-    // ===== طرق الدفع + نسخ =====
+    // الدفع + النسخ
     const toast = document.getElementById('toast');
     const showToast=()=>{ toast.style.display='block'; clearTimeout(showToast.t); showToast.t=setTimeout(()=>toast.style.display='none',1200); };
 
@@ -136,9 +153,9 @@
       alias: { title:'CliQ (الاسم المستعار)', label:'الاسم المستعار', value:'RECSAFETY' },
       zain : { title:'زين كاش',                label:'رقم زين كاش',    value:'0796968987' }
     };
-    const pmHint   = document.getElementById('pmHint');
-    const pmValH   = document.getElementById('f_pm_value');
-    const pmLabH   = document.getElementById('f_pm_label');
+    const pmHint = document.getElementById('pmHint');
+    const pmValH = document.getElementById('f_pm_value');
+    const pmLabH = document.getElementById('f_pm_label');
 
     function selectedMethodKey(){
       const txt = document.querySelector('input[name="payment_method"]:checked')?.value || 'تحويل بنكي';
@@ -150,47 +167,37 @@
     function renderPM(){
       const key = selectedMethodKey();
       const d = PAY[key];
-      pmValH.value = d.value;
-      pmLabH.value = d.label;
-
+      pmValH.value = d.value; pmLabH.value = d.label;
       pmHint.innerHTML = `
         قم بالدفع عبر <strong>${d.title}</strong> — <b>${d.label}:</b>
         <span id="pmVal" style="direction:ltr;unicode-bidi:plaintext">${d.value}</span>
         <button type="button" class="btn btn-ghost copybtn" id="copyPM">نسخ</button>
-        <div class="muted" style="margin-top:6px">بعد الدفع، أرفق الإيصال كصورة/‏PDF ثم أرسل الطلب.</div>
-      `;
-      document.getElementById('copyPM').onclick = ()=>{
-        navigator.clipboard.writeText(d.value);
-        showToast();
-      };
+        <div class="muted" style="margin-top:6px">بعد الدفع، أرفق الإيصال كصورة/‏PDF ثم أرسل الطلب.</div>`;
+      document.getElementById('copyPM').onclick = ()=>{ navigator.clipboard.writeText(d.value); showToast(); };
     }
     document.getElementById('payGrid').addEventListener('change', renderPM);
     renderPM();
 
-    // ===== تحقّق حجم الإيصال + حفظ الملخص لصفحة الشكر =====
+    // تحقّق حجم المرفق + حفظ ملخص
     document.getElementById('orderForm').addEventListener('submit', (e)=>{
-      const f = document.getElementById('receipt');
-      if(f.files[0] && f.files[0].size > 6*1024*1024){
+      const file = document.getElementById('receipt');
+      if(file.files[0] && file.files[0].size > 6*1024*1024){
         e.preventDefault();
         alert('حجم الإيصال يتجاوز 6MB، رجاءً قلّصه وأعد المحاولة.');
         return;
       }
-      // حفظ الملخص
       const company       = document.getElementById('company').value.trim();
       const company_phone = document.getElementById('company_phone').value.trim();
       const contact_name  = document.getElementById('contact_name').value.trim();
       const contact_phone = document.getElementById('contact_phone').value.trim();
       const email         = document.getElementById('email').value.trim();
       const key           = selectedMethodKey();
-      const lastOrder = {
-        item, price, company, company_phone, contact_name, contact_phone, email,
-        payment: PAY[key]
-      };
+      const lastOrder = { item, price, company, company_phone, contact_name, contact_phone, email, payment: PAY[key] };
       localStorage.setItem('lastOrder', JSON.stringify(lastOrder));
     });
 
-    // ===== زر واتساب لرقم العمل المحدّث =====
-    const WA_INTL = '962796968987'; // 0796968987
+    // واتساب (سطر جديد حقيقي)
+    const WA_INTL = '962796968987';
     document.getElementById('waBtn').addEventListener('click', ()=>{
       const company       = document.getElementById('company').value.trim();
       const company_phone = document.getElementById('company_phone').value.trim();
@@ -200,7 +207,7 @@
       const key           = selectedMethodKey();
       const pm            = PAY[key];
 
-      const lines = [
+      const msg = [
         'طلب جديد — R E.C Safety',
         `الخدمة: ${item}`,
         `القيمة: ${price ? Number(price).toLocaleString('ar-EG')+' د.أ' : '-'}`,
@@ -210,12 +217,10 @@
         `المسؤول: ${contact_name} — ${contact_phone}`,
         `البريد: ${email}`,
         '(أرفقت الإيصال في النموذج البريدي).'
-      ].filter(Boolean).join('\\n');
+      ].join('\n');
 
-      const url = `https://wa.me/${WA_INTL}?text=${encodeURIComponent(lines)}`;
-      window.open(url, '_blank', 'noopener');
+      window.open(`https://wa.me/${WA_INTL}?text=${encodeURIComponent(msg)}`,'_blank','noopener');
     });
   </script>
 </body>
 </html>
-

@@ -16,7 +16,7 @@
   <meta property="og:url" content="https://mohamad-alshlool03.github.io/R-E.C-Safety/">
   <meta name="twitter:card" content="summary_large_image">
 
-  <!-- خط Cairo (تركنا قسم الأداء كما هو بدون preconnect وفق طلبك) -->
+  <!-- خط Cairo -->
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;800&display=swap" rel="stylesheet">
 
   <style>
@@ -147,10 +147,9 @@
         </div>
       </div>
 
-      <!-- هنا وضعنا الفيديو مكان المساحة الفارغة -->
+      <!-- الفيديو -->
       <div class="hero-art" aria-label="فيديو تعريفي">
         <video id="introVideo" controls playsinline>
-          <!-- سمّ الملف video_summary وضعه بجانب الصفحة. يمكن استخدام أي امتداد مدعوم -->
           <source src="video_summary.mp4" type="video/mp4">
           <source src="video_summary.webm" type="video/webm">
           المتصفح لا يدعم تشغيل الفيديو.
@@ -248,46 +247,35 @@
   <div class="wa-float"><a id="waFloat" href="#" aria-label="تواصل واتساب">تواصل واتساب</a></div>
 
   <script>
-    // ===== بيانات الاتصال المحدّثة =====
-    const CONTACT = {
-      whatsappIntl: '962796968987',          // 0796968987
-      email: 'rec.safety1998@gmail.com'      // بريد جديد
-    };
+    // ===== بيانات الاتصال =====
+    const CONTACT = { whatsappIntl: '962796968987', email: 'rec.safety1998@gmail.com' };
     const waLink = (text='مرحبًا، أود الاستفسار عن خدمات R E.C Safety') =>
       `https://wa.me/${CONTACT.whatsappIntl}?text=${encodeURIComponent(text)}`;
 
-    // أزرار واتساب/إيميل (مع ترك زر الفوتر للمطوّر كما هو)
+    // أزرار واتساب/إيميل
     document.getElementById('waCta').href   = waLink();
     document.getElementById('waQuick').href = waLink('لدي استفسار سريع');
     document.getElementById('waFloat').href = waLink('مرحبًا');
-    document.getElementById('emailQuick').href = `mailto:${CONTACT.email}?subject=${encodeURIComponent('استفسار - R E.C Safety')}`;
+    document.getElementById('emailQuick').href =
+      `mailto:${CONTACT.email}?subject=${encodeURIComponent('استفسار - R E.C Safety')}`;
 
-    // ===== الخدمات + الأسعار =====
     // ===== الخدمات (بدون أسعار) =====
-const SERVICES = [
-  // (٣) جلسة الاستشارات الشاملة
-  { name: 'جلسة استشارات شاملة للمساعدة في تأهيل بيئة العمل وإعداد الوثائق المطلوبة' },
+    const SERVICES = [
+      { name: 'جلسة استشارات شاملة للمساعدة في تأهيل بيئة العمل وإعداد الوثائق المطلوبة' },
+      { name: 'إعداد الوثائق المطلوبة وتجهيزها وتقديم توصيات عامة شاملة لبيئة العمل — بدون زيارة ميدانية' },
+      { name: 'إعداد الوثائق وتجهيزها وتوصيات خاصة محددة لبيئة العمل — شامل زيارة ميدانية' }
+    ];
+    const grid = document.getElementById('servicesGrid');
+    grid.innerHTML = SERVICES.map(s => `
+      <div class="service">
+        <h3>${s.name}</h3>
+        <div class="actions">
+          <a class="btn btn-brand" href="checkout.html?item=${encodeURIComponent(s.name)}">اطلب الآن</a>
+        </div>
+      </div>
+    `).join('');
 
-  // (٥) إعداد الوثائق + توصيات عامة — بدون زيارة ميدانية
-  { name: 'إعداد الوثائق المطلوبة وتجهيزها وتقديم توصيات عامة شاملة لبيئة العمل — بدون زيارة ميدانية' },
-
-  // (٦) إعداد الوثائق + توصيات خاصة — شامل زيارة ميدانية
-  { name: 'إعداد الوثائق وتجهيزها وتوصيات خاصة محددة لبيئة العمل — شامل زيارة ميدانية' }
-];
-
-const grid = document.getElementById('servicesGrid');
-grid.innerHTML = SERVICES.map(s => `
-  <div class="service">
-    <h3>${s.name}</h3>
-    <!-- تم حذف السعر -->
-    <div class="actions">
-      <a class="btn btn-brand" href="checkout.html?item=${encodeURIComponent(s.name)}">اطلب الآن</a>
-    </div>
-  </div>
-`).join('');
-
-
-    // ===== عدّادات KPI تُفعّل عند الظهور =====
+    // ===== عدّادات KPI =====
     (function(){
       const els = document.querySelectorAll('[data-count]');
       if(!els.length) return;
@@ -384,7 +372,7 @@ grid.innerHTML = SERVICES.map(s => `
         document.getElementById('zEmail').value.trim() ? `البريد: ${document.getElementById('zEmail').value.trim()}` : null,
         `التاريخ: ${zDate.value || '-'}`,
         `الوقت: ${zTime.value || '-'}`
-      ].filter(Boolean).join('\\n');
+      ].filter(Boolean).join('\n');  /* ← هنا تم إصلاح مشكلة \n */
     }
 
     function zoomValidate(){
@@ -418,10 +406,5 @@ grid.innerHTML = SERVICES.map(s => `
       window.location.href = `mailto:${CONTACT.email}?subject=${subject}&body=${body}`;
     });
   </script>
-  <!-- (اختياري) إضافة تحليلات لاحقًا -->
 </body>
 </html>
-
-
-
-

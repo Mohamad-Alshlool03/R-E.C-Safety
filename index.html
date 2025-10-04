@@ -263,24 +263,29 @@
     document.getElementById('emailQuick').href = `mailto:${CONTACT.email}?subject=${encodeURIComponent('استفسار - R E.C Safety')}`;
 
     // ===== الخدمات + الأسعار =====
-    const SERVICES = [
-      { name:'جلسة استشارات لتأهيل بيئة العمل وتقديم توصيات عامة', price:100 },
-      { name:'جلسة استشارات للمساعدة في إعداد الوثائق المطلوبة', price:150 },
-      { name:'جلسة استشارات شاملة للمساعدة في تأهيل بيئة العمل وإعداد الوثائق المطلوبة', price:200 },
-      { name:'زيارة ميدانية لمواقع بيئة العمل وتقديم توصيات خاصة', price:1000 },
-      { name:'إعداد الوثائق المطلوبة وتجهيزها وتقديم توصيات عامة شاملة لبيئة العمل', price:2000 },
-      { name:'إعداد الوثائق وتجهيزها وتوصيات خاصة محددة لبيئة العمل', price:2500 }
-    ];
-    const grid = document.getElementById('servicesGrid');
-    grid.innerHTML = SERVICES.map(s => `
-      <div class="service">
-        <h3>${s.name}</h3>
-        <div class="price">${s.price.toLocaleString('ar-EG')} د.أ</div>
-        <div class="actions">
-          <a class="btn btn-brand" href="checkout.html?item=${encodeURIComponent(s.name)}&price=${s.price}">اطلب الآن</a>
-        </div>
-      </div>
-    `).join('');
+    // ===== الخدمات (بدون أسعار) =====
+const SERVICES = [
+  // (٣) جلسة الاستشارات الشاملة
+  { name: 'جلسة استشارات شاملة للمساعدة في تأهيل بيئة العمل وإعداد الوثائق المطلوبة' },
+
+  // (٥) إعداد الوثائق + توصيات عامة — بدون زيارة ميدانية
+  { name: 'إعداد الوثائق المطلوبة وتجهيزها وتقديم توصيات عامة شاملة لبيئة العمل — بدون زيارة ميدانية' },
+
+  // (٦) إعداد الوثائق + توصيات خاصة — شامل زيارة ميدانية
+  { name: 'إعداد الوثائق وتجهيزها وتوصيات خاصة محددة لبيئة العمل — شامل زيارة ميدانية' }
+];
+
+const grid = document.getElementById('servicesGrid');
+grid.innerHTML = SERVICES.map(s => `
+  <div class="service">
+    <h3>${s.name}</h3>
+    <!-- تم حذف السعر -->
+    <div class="actions">
+      <a class="btn btn-brand" href="checkout.html?item=${encodeURIComponent(s.name)}">اطلب الآن</a>
+    </div>
+  </div>
+`).join('');
+
 
     // ===== عدّادات KPI تُفعّل عند الظهور =====
     (function(){
